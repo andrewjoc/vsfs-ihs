@@ -95,3 +95,24 @@ def convert_to_geodataframe(df):
     df_copy['geometry'] = gpd.points_from_xy(df.Longitude, df.Latitude)
     df_copy = gpd.GeoDataFrame(df_copy, geometry = 'geometry', crs='epsg:4326')
     return df_copy
+
+
+def find_ppg_areas(ppg_gdf, country):
+    '''
+    Parameter(s): DataFrame (People groups data frame. MUST be cleaned according to other functions)
+    Parameter(s): String (Name of a Country, e.g. 'Papua New Guinea')
+    Descriptions: Finds PeopleGroups data for a specific country. 
+    Based off of 2 filters: People groups with Country column = country and People groups without a Country of Origin ('NONE or Without Homeland')
+    Note: This function takes into consideration that there are PeopleGroups within a country that are not indigenous to the area. It removes
+    People Groups that have a country of origin and Deaf peoples. However, it is not 100% accurate so further cleaning may be needed to remove non-indigenous groups.
+    This function also reformats the language variable to remove the 3 letter language code.
+    '''
+    country_data = ppg_df[ppg_df['Ctry'] == country]
+    country_data = country_data.replace({np.nan:'NONE', 'Without Homeland': 'NONE'})
+    only_indigenous = country_data[(country_data['Country of Origin'] == 'NONE')]
+    only_indigenous = only_indigenous[only_indigenous['IMB Affinity Group'] != 'Deaf Peoples']
+    clean_df = only_indigenous[['IMB Affinity Group', 'Country', 'People Group', 'People Name', 'Population', 'Language', 'Religion', 'Population', 'Latitude', 'Longitude']]
+    rename_language = clean_df.copy()
+    rename_language['Language'] = rename_language['Language'].str.extract('(^\w+(?:\s\w+)*)')[0]
+    print('This dataset may still need cleaning. Please review the returned dataset.')
+    return rename_language 
