@@ -23,11 +23,19 @@ Another method is needed to account for the often large areas that indigenous gr
 * Currently experiencing issues with method 2
   * Pushing large shapefile to GitHub (> 100 MB)
   * Inconsistent naming of ADM1 boundaries between datasets. Difficult to merge and compare population numbers.
-  
+
+[12/7]
+* Created MongoDB cluster and uploaded subnational population data & subnational boundaries (CGAZ - geoBoundaries).  
+* Subnational boundaries have 2 countries that do not have labels for any ADM1  
+    * Afghanistan, Angola
+* After filling in boundaries for Afghanistan and Angola, will need to begin matching the names of each ADM1 between the 2 datasets to make sure they can be merged later on.
+    * reminder to make sure the datasets are utf-8 encoded
+* Need to upload PeopleAreas GeoJSON to a database in MongoDB, kept crashing (?)  
   
   
  ***
- ### Links
+ ### Datasets
  * People Groups Data: https://www.peoplegroups.org/258.aspx
- * People Groups Area Data: https://go-imb.opendata.arcgis.com/datasets/imb::apg-people-group-areas/explore?location=43.783411%2C70.948650%2C4.70
-  
+ * People Groups Area Data: https://go-imb.opendata.arcgis.com/datasets/imb::apg-people-group-areas/explore?location=43.783411%2C70.948650%2C4.70  
+ * Subnational Boundaries (CGAZ): https://www.geoboundaries.org/downloadCGAZ.html  
+ * Subnational Population Data (Oxford MPI, sheet 1): https://ophi.org.uk/multidimensional-poverty-index/
