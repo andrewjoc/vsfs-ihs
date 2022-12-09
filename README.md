@@ -31,6 +31,12 @@ Another method is needed to account for the often large areas that indigenous gr
 * After filling in boundaries for Afghanistan and Angola, will need to begin matching the names of each ADM1 between the 2 datasets to make sure they can be merged later on.
     * reminder to make sure the datasets are utf-8 encoded
 * Need to upload PeopleAreas GeoJSON to a database in MongoDB, kept crashing (?)  
+
+[12/9]
+* Found that MongoDB free limit is 512MB but the people areas dataset is too large. Anyone interested will have to store the people areas dataset locally.
+* Started to manually match ADM1 regions between shapes and subnational population starting with Southeast Asian nations.
+    * Subnational population data sometimes combines 2 ADM1 regions. (e.g. Cambodia - 'Kampot & Kep' instead of 'Kampot' and 'Kep' separate). Not sure how validation will work in this case.
+    * Some countries are not in the dataset (e.g. Malaysia, Singapore)
   
   
  ***
