@@ -37,11 +37,14 @@ def prettylist(lst, remove_br=False):
 
 
 def process_input_data():
+    """
+    requires people_areas.geojosn, global_adm1_populations.xlsx, and cgaz_geometries to be downloaded and stored in the data directory.
+    """
     people_areas = gpd.read_file('./data/people_areas.geojson')
     people_areas = people_areas[['Name', 'GENC0', 'Pop', 'Ctry', 'geometry']].rename(columns={'Name': 'People Group', 'Pop': 'People Group Population', 'GENC0': 'Alpha-3 Code', 'Ctry': 'Country'})
     
-    world_populations = pd.concat(pd.read_excel('global_adm1_populations.xlsx', sheet_name=None), ignore_index=True)
-    cgaz_geometries = pd.read_csv('cgaz_geometries.csv', index_col=[0])
+    world_populations = pd.concat(pd.read_excel('./data/global_adm1_populations.xlsx', sheet_name=None), ignore_index=True)
+    cgaz_geometries = pd.read_csv('./data/cgaz_geometries.csv', index_col=[0])
     full_subnational_data = world_populations.merge(cgaz_geometries, left_on='CGAZ shape ID', right_on='shapeID')
     full_subnational_data.geometry = full_subnational_data.geometry.apply(wkt.loads)
     full_subnational_data = gpd.GeoDataFrame(full_subnational_data, geometry = 'geometry', crs = 'EPSG:4326')
@@ -159,10 +162,3 @@ def validate_all(ppg_gdf, subnational_data, generate_report=False):
     
     return find_all_adm1(ppg_gdf, subnational_data, generate_report)
 
-
-
-
-def validate_country_widget(country):
-    people_areas, subnational_data = process_input_data()
-    country_df = validate_country(people_areas, subnational_data, country, generate_report=True)
-    return country_df
