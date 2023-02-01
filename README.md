@@ -1,4 +1,4 @@
-# Indian Health Service: Data Collection
+# Indian Health Service: Indigenous Peoples of Maritime Southeast Asia & Oceania
 ### Objective
 The mission of IHS is to raise the physical, mental, social and spiritual health of American Indians and Alaska natives (AI/AN) to the highest level. To be responsive to the second goal of its 2019-2023
 strategic plan "to promote excellence and quality through innovation of the Indian health system into an optimally performing organization," the Division of Program Statistics in the Office of Public Health
@@ -14,29 +14,6 @@ The coverage of nations or the range of health indicators had been limited in ea
 ***
 ### Current Project
 * *Validate People Groups data based on population estimates by national census bureaus.*
-
-[11/10] 
-* Finished method 1, referencing People Groups points to administrative level 1 (ADM1) boundaries. Compared population of people group to official subnational population estimates.
-Another method is needed to account for the often large areas that indigenous groups span (across ADM1 boundaries).
-
-[11/15]
-* Currently experiencing issues with method 2
-  * Pushing large shapefile to GitHub (> 100 MB)
-  * Inconsistent naming of ADM1 boundaries between datasets. Difficult to merge and compare population numbers.
-
-[12/7]
-* Created MongoDB cluster and uploaded subnational population data & subnational boundaries (CGAZ - geoBoundaries).  
-* Subnational boundaries have 2 countries that do not have labels for any ADM1  
-    * Afghanistan, Angola
-* After filling in boundaries for Afghanistan and Angola, will need to begin matching the names of each ADM1 between the 2 datasets to make sure they can be merged later on.
-    * reminder to make sure the datasets are utf-8 encoded
-* Need to upload PeopleAreas GeoJSON to a database in MongoDB, kept crashing (?)  
-
-[12/9]
-* Found that MongoDB free limit is 512MB but the people areas dataset is too large. Anyone interested will have to store the people areas dataset locally.
-* Started to manually match ADM1 regions between shapes and subnational population starting with Southeast Asian nations.
-    * Subnational population data sometimes combines 2 ADM1 regions. (e.g. Cambodia - 'Kampot & Kep' instead of 'Kampot' and 'Kep' separate). Not sure how validation will work in this case.
-    * Some countries are not in the dataset (e.g. Malaysia, Singapore)
   
   
  ***
