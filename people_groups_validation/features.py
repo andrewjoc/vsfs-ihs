@@ -3,7 +3,12 @@ import geopandas as gpd
 import folium
 from shapely import *
 from shapely.validation import make_valid
+import gdown
 import numpy as np
+from pathlib import Path
+import warnings
+from shapely.errors import ShapelyDeprecationWarning
+warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning) 
 
 
 
@@ -11,6 +16,8 @@ import numpy as np
 
 def prettylist(lst, remove_br=False):
     '''
+    input: lst (list), remove_br (boolean)
+    output: people_string (str)
     Concatenates a list of strings in order to be viewed nicely when making an interactive Folium map. 
     It ensures that the field does not run off the page when viewing points on an interactive Folium map.
     '''
@@ -38,8 +45,29 @@ def prettylist(lst, remove_br=False):
 
 def process_input_data():
     """
-    requires people_areas.geojosn, global_adm1_populations.xlsx, and cgaz_geometries to be downloaded and stored in the data directory.
+    output: people_areas (dataframe), full_subnational_data (dataframe)
+    description: cleans the dataframes to be used in analysis
     """
+    
+    # load data from google drive
+    people_areas_file = Path("./data/peopleAreas.geojson")
+    if people_areas_file.is_file():
+        pass
+    else:
+        people_areas_drive_url = 'https://drive.google.com/uc?id=1xKdfjp2B23VHqo_o4u3kyunioxxFNgSO'
+        output = './data/peopleAreas.geojson'
+        gdown.download(people_areas_drive_url, output, quiet=False)
+    
+    cgaz_geometries_file = Path("./data/cgaz_geometries.csv")
+    
+    if cgaz_geometries_file.is_file():
+        pass
+    else: 
+        cgaz_geometries_drive_url = 'https://drive.google.com/uc?id=1OxWZpEKy-Gpp6EsT9OBbTYBoz9BULam8'
+        output = './data/cgaz_geometries.csv'
+        gdown.download(cgaz_geometries_drive_url, output, quiet=False)
+    
+    # read files as dataframes
     people_areas = gpd.read_file('./data/people_areas.geojson')
     people_areas = people_areas[['Name', 'GENC0', 'Pop', 'Ctry', 'geometry']].rename(columns={'Name': 'People Group', 'Pop': 'People Group Population', 'GENC0': 'Alpha-3 Code', 'Ctry': 'Country'})
     
@@ -56,11 +84,11 @@ def process_input_data():
 
 def find_all_adm1(ppg_gdf, pop_data, generate_report):
     '''
-    Finds all the ADM1 boundaries that a people group intersects. 
-    ppg_gdf -> people areas dataframe
-    pop_data -> subnational data 
-    generate_report -> prints people groups that are any invalid and explains why
+    input: ppg_gdf (geodataframe), pop_data (dataframe), generate_report (boolean)
+    output: people_areas (dataframe)
+    description: Helper function for validate_country. Finds all the ADM1 boundaries that a people group intersects.
     '''
+    
     ppl_areas = ppg_gdf.copy()
     
     # set both Coordinate Reference Systems (CRS) to be EPSG:4326
@@ -116,7 +144,8 @@ def find_all_adm1(ppg_gdf, pop_data, generate_report):
 
 def find_total_boundary_pop(lst, subnational_data):
     '''
-    Helper function for find_all_adm1
+    input: lst (list), subnational_data (dataframe)
+    description: Helper function for find_all_adm1
     '''
     if lst == 'NONE':
         return np.nan
@@ -129,13 +158,15 @@ def find_total_boundary_pop(lst, subnational_data):
 
 
 
-def validate_country(ppg_gdf, subnational_data, country, generate_report=False):
+def validate_country(country, generate_report=False):
     '''
-    Returns a Pandas dataframe validating all the people groups within a certain country
-    ppg_gdf -> full people areas dataframe
-    pop_data -> subnational data 
-    generate_report -> prints people groups that are any invalid and explains why
+    input: country (str), generate_report (boolean)
+    output: dataframe 
+    description: Returns a Pandas dataframe validating all the people groups within a certain country. If generate_report=True, it prints out why some groups did not pass the validation
     '''
+    
+    ppg_gdf, subnational_data = process_input_data()
+    
     # select subnational population data for a specific country
     country_pop = subnational_data[subnational_data['Country'] == country].copy()
     
@@ -155,10 +186,10 @@ def validate_country(ppg_gdf, subnational_data, country, generate_report=False):
 def validate_all(ppg_gdf, subnational_data, generate_report=False):
     '''
     Returns a Pandas dataframe validating all people groups
-    ppg_gdf -> full people areas dataframe
-    pop_data -> subnational data 
-    generate_report -> prints people groups that are any invalid and explains why
     '''
-    
-    return find_all_adm1(ppg_gdf, subnational_data, generate_report)
+    raise NotImplementedError('Function not implemented yet.')
 
+
+def countries_with_data():
+    adm1_populations = pd.concat(pd.read_excel('./data/global_adm1_populations.xlsx', sheet_name=None), ignore_index=True)
+    return sorted(adm1_populations.dropna(subset=['ADM1 Population']).Country.unique())
