@@ -50,12 +50,12 @@ def process_input_data():
     """
     
     # load data from google drive
-    people_areas_file = Path("./data/peopleAreas.geojson")
+    people_areas_file = Path("./data/people_areas.geojson")
     if people_areas_file.is_file():
         pass
     else:
         people_areas_drive_url = 'https://drive.google.com/uc?id=1xKdfjp2B23VHqo_o4u3kyunioxxFNgSO'
-        output = './data/peopleAreas.geojson'
+        output = './data/people_areas.geojson'
         gdown.download(people_areas_drive_url, output, quiet=False)
     
     cgaz_geometries_file = Path("./data/cgaz_geometries.csv")
