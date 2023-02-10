@@ -73,9 +73,10 @@ def process_input_data():
     people_areas = people_areas[['Name', 'GENC0', 'Pop', 'Ctry', 'geometry']].rename(columns={'Name': 'People Group', 'Pop': 'People Group Population', 'GENC0': 'Alpha-3 Code', 'Ctry': 'Country'})
         
 
+    # each time a validation is run, 
     adm1_pop_data_url = 'https://drive.google.com/uc?id=1Ae60lcYPcaCIw2vwY62ZLMfmmbUwJ6F5'
     pop_data_path = './data/global_adm1_populations.xlsx'
-    gdown.download(adm1_pop_data_url, pop_data_output, quiet=False)
+    gdown.download(adm1_pop_data_url, pop_data_path, quiet=True)
     
     world_populations = pd.concat(pd.read_excel(pop_data_path, sheet_name=None), ignore_index=True)
     cgaz_geometries = pd.read_csv('./data/cgaz_geometries.csv', index_col=[0])
@@ -213,14 +214,11 @@ def countries_with_data():
 def map_results(df, query=None):
     '''
     output: folium map
-    description: 
+    description: outputs an interactive map of people groups that did not intersect any ADM1 boundaries.
     '''
     
     results_map = df.query('`ADM1 Boundaries Present` == "NONE"')
+    
+    if results.query('`ADM1 Boundaries Present` == "NONE"').shape[0] == 0:
+        return print('This country has no people groups that did not intersect with ADM1 boundaries.')
     return results_map.explore(color='red')
-
-
-def update_population_data():
-    adm1_pop_data_url = 'https://drive.google.com/uc?id=1Ae60lcYPcaCIw2vwY62ZLMfmmbUwJ6F5'
-    pop_data_path = './data/global_adm1_populations.xlsx'
-    gdown.download(adm1_pop_data_url, pop_data_path, quiet=False)
