@@ -51,6 +51,7 @@ def process_input_data():
     
     # load data from google drive
     people_areas_file = Path("./data/people_areas.geojson")
+    
     if people_areas_file.is_file():
         pass
     else:
@@ -70,8 +71,13 @@ def process_input_data():
     # read files as dataframes
     people_areas = gpd.read_file('./data/people_areas.geojson')
     people_areas = people_areas[['Name', 'GENC0', 'Pop', 'Ctry', 'geometry']].rename(columns={'Name': 'People Group', 'Pop': 'People Group Population', 'GENC0': 'Alpha-3 Code', 'Ctry': 'Country'})
+        
+
+    adm1_pop_data_url = 'https://drive.google.com/uc?id=1Ae60lcYPcaCIw2vwY62ZLMfmmbUwJ6F5'
+    pop_data_path = './data/global_adm1_populations.xlsx'
+    gdown.download(adm1_pop_data_url, pop_data_output, quiet=False)
     
-    world_populations = pd.concat(pd.read_excel('./data/global_adm1_populations.xlsx', sheet_name=None), ignore_index=True)
+    world_populations = pd.concat(pd.read_excel(pop_data_path, sheet_name=None), ignore_index=True)
     cgaz_geometries = pd.read_csv('./data/cgaz_geometries.csv', index_col=[0])
     full_subnational_data = world_populations.merge(cgaz_geometries, left_on='CGAZ shape ID', right_on='shapeID')
     full_subnational_data.geometry = full_subnational_data.geometry.apply(wkt.loads)
@@ -119,7 +125,6 @@ def find_all_adm1(ppg_gdf, pop_data, generate_report):
     ppl_areas['ADM1 Boundaries Present'] = boundaries     
     
     # add the total boundary population column
-    # ppl_areas['Total Boundary Population'] = ppl_areas['ADM1 Boundaries Present'].apply(find_total_boundary_pop)
     ppl_areas['Total Boundary Population'] = ppl_areas['ADM1 Boundaries Present'].apply(lambda x: find_total_boundary_pop(x, pop_data))
     
     # add the valid column -- total boundary population >= people group population
@@ -135,8 +140,11 @@ def find_all_adm1(ppg_gdf, pop_data, generate_report):
             if invalid_people_groups[invalid_people_groups['People Group'] == ppl_group]['ADM1 Boundaries Present'].iloc[0] == 'NONE':
                 print(f'The {ppl_group} people group did not intersect with a CGAZ ADM1 boundary. They may be valid.')
             elif invalid_people_groups[invalid_people_groups['People Group'] == ppl_group]['ADM1 Boundaries Present'].iloc[0] == 'NONE':
-                print(f'The {ppl_group} people group had a population greater than all ADM1 boundaries they intersected. They are invalid.')
-
+                print(f'The {ppl_group} people group had a population greater than all ADM1 boundaries they intersected. They are invalid.')            
+        
+    ppl_areas
+    
+    
     return ppl_areas
 
 
@@ -181,15 +189,38 @@ def validate_country(country, generate_report=False):
 
 
 
-
-
 def validate_all(ppg_gdf, subnational_data, generate_report=False):
     '''
-    Returns a Pandas dataframe validating all people groups
+    description: Returns a Pandas dataframe validating all people groups
     '''
     raise NotImplementedError('Function not implemented yet.')
 
 
 def countries_with_data():
+    '''
+    output: list
+    description: Returns a list of countries that currently have subnational data
+    '''
+    
+    adm1_pop_data_url = 'https://drive.google.com/uc?id=1Ae60lcYPcaCIw2vwY62ZLMfmmbUwJ6F5'
+    pop_data_path = './data/global_adm1_populations.xlsx'
+    gdown.download(adm1_pop_data_url, pop_data_path, quiet=True)
+    
     adm1_populations = pd.concat(pd.read_excel('./data/global_adm1_populations.xlsx', sheet_name=None), ignore_index=True)
     return sorted(adm1_populations.dropna(subset=['ADM1 Population']).Country.unique())
+
+
+def map_results(df, query=None):
+    '''
+    output: folium map
+    description: 
+    '''
+    
+    results_map = df.query('`ADM1 Boundaries Present` == "NONE"')
+    return results_map.explore(color='red')
+
+
+def update_population_data():
+    adm1_pop_data_url = 'https://drive.google.com/uc?id=1Ae60lcYPcaCIw2vwY62ZLMfmmbUwJ6F5'
+    pop_data_path = './data/global_adm1_populations.xlsx'
+    gdown.download(adm1_pop_data_url, pop_data_path, quiet=False)
