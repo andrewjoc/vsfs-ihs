@@ -219,6 +219,8 @@ def map_results(df, query=None):
     
     results_map = df.query('`ADM1 Boundaries Present` == "NONE"')
     
-    if results.query('`ADM1 Boundaries Present` == "NONE"').shape[0] == 0:
-        return print('This country has no people groups that did not intersect with ADM1 boundaries.')
+    if results_map.query('`ADM1 Boundaries Present` == "NONE"').shape[0] == 0:
+        print('This country has no people groups that did not intersect with ADM1 boundaries.')
+        return
+    
     return results_map.explore(color='red')
