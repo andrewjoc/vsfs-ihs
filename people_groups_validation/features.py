@@ -73,7 +73,7 @@ def process_input_data():
     people_areas = people_areas[['Name', 'GENC0', 'Pop', 'Ctry', 'geometry']].rename(columns={'Name': 'People Group', 'Pop': 'People Group Population', 'GENC0': 'Alpha-3 Code', 'Ctry': 'Country'})
         
 
-    # each time a validation is run, 
+    # each time a validation is run, adm1 population data is read from google drive 
     adm1_pop_data_url = 'https://drive.google.com/uc?id=1Ae60lcYPcaCIw2vwY62ZLMfmmbUwJ6F5'
     pop_data_path = './data/global_adm1_populations.xlsx'
     gdown.download(adm1_pop_data_url, pop_data_path, quiet=True)
@@ -89,9 +89,9 @@ def process_input_data():
 
 
 
-def find_all_adm1(ppg_gdf, pop_data, generate_report):
+def find_all_adm1(ppg_gdf, pop_data, verbose):
     '''
-    input: ppg_gdf (geodataframe), pop_data (dataframe), generate_report (boolean)
+    input: ppg_gdf (geodataframe), pop_data (dataframe), verbose (boolean)
     output: people_areas (dataframe)
     description: Helper function for validate_country. Finds all the ADM1 boundaries that a people group intersects.
     '''
@@ -103,7 +103,10 @@ def find_all_adm1(ppg_gdf, pop_data, generate_report):
     pop_data.crs = 'EPSG:4326'
     
     
-    # Finding all overlapping boundaries
+    # Finding all overlapping people polygons and ADM1 boundaries
+    if verbose:
+        print('Finding overlapping polygons')
+        
     boundaries = []
     for people_polygon in ppl_areas.geometry:
         name = ppl_areas[ppl_areas.geometry == people_polygon]['People Group'].iloc[0]
@@ -128,11 +131,11 @@ def find_all_adm1(ppg_gdf, pop_data, generate_report):
     # add the total boundary population column
     ppl_areas['Total Boundary Population'] = ppl_areas['ADM1 Boundaries Present'].apply(lambda x: find_total_boundary_pop(x, pop_data))
     
-    # add the valid column -- total boundary population >= people group population
-    ppl_areas['Valid People Group'] = ppl_areas['Total Boundary Population'] >= ppl_areas['People Group Population']
+    # add the valid column -- (total boundary population * 1.05) >= people group population 
+    ppl_areas['Valid People Group'] = (ppl_areas['Total Boundary Population'] * 1.05) >= ppl_areas['People Group Population']
     
-    # generate_report - add print statements to tell you which people groups are invalid and why
-    if generate_report:
+    # verbose - add print statements to tell you which people groups are invalid and why
+    if verbose:
         invalid_people_groups = ppl_areas[ppl_areas['Valid People Group'] == False]
         if invalid_people_groups.shape[0] == 0:
             print(f'All people groups in {ppl_areas.Country.iloc[0]} are valid.')
@@ -140,12 +143,11 @@ def find_all_adm1(ppg_gdf, pop_data, generate_report):
         for ppl_group in invalid_people_groups['People Group']:
             if invalid_people_groups[invalid_people_groups['People Group'] == ppl_group]['ADM1 Boundaries Present'].iloc[0] == 'NONE':
                 print(f'The {ppl_group} people group did not intersect with a CGAZ ADM1 boundary. They may be valid.')
-            elif invalid_people_groups[invalid_people_groups['People Group'] == ppl_group]['ADM1 Boundaries Present'].iloc[0] == 'NONE':
+            elif invalid_people_groups[invalid_people_groups['People Group'] == ppl_group]['People Group Population'].iloc[0] >= invalid_people_groups[invalid_people_groups['People Group'] == ppl_group]['Total Boundary Population'].iloc[0] * 1.05: # error of 5%
                 print(f'The {ppl_group} people group had a population greater than all ADM1 boundaries they intersected. They are invalid.')            
         
     ppl_areas
-    
-    
+  
     return ppl_areas
 
 
@@ -167,14 +169,23 @@ def find_total_boundary_pop(lst, subnational_data):
 
 
 
-def validate_country(country, generate_report=False):
+def validate_country(country, verbose=True):
     '''
-    input: country (str), generate_report (boolean)
-    output: dataframe 
-    description: Returns a Pandas dataframe validating all the people groups within a certain country. If generate_report=True, it prints out why some groups did not pass the validation
+    input: country (str), verbose (boolean)
+    output: dataframe
+    description: Returns a Pandas dataframe validating all the people groups within a certain country. If verbose=True, it prints out current status of the function and why some groups did not pass the validation
     '''
     
+    adm1_populations = pd.concat(pd.read_excel('./data/global_adm1_populations.xlsx', sheet_name=None), ignore_index=True)
+    countries_list = adm1_populations.dropna(subset=['ADM1 Population']).Country.unique()
+    
+    assert country in countries_list, "The country you\'ve attempted to validate either has no ADM1 population data or it is misspelled."
+        
+    if verbose:    
+        print('Processing input data')
+        
     ppg_gdf, subnational_data = process_input_data()
+    
     
     # select subnational population data for a specific country
     country_pop = subnational_data[subnational_data['Country'] == country].copy()
@@ -186,11 +197,13 @@ def validate_country(country, generate_report=False):
     # select people groups data for a specific country
     country_ppg = ppg_gdf[ppg_gdf['Country'] == country]
     
-    return find_all_adm1(country_ppg, country_pop, generate_report)
+    adm1_populations = pd.concat(pd.read_excel('./data/global_adm1_populations.xlsx', sheet_name=None), ignore_index=True)    
+    
+    return find_all_adm1(country_ppg, country_pop, verbose)
 
 
 
-def validate_all(ppg_gdf, subnational_data, generate_report=False):
+def validate_all(ppg_gdf, subnational_data, verbose=False):
     '''
     description: Returns a Pandas dataframe validating all people groups
     '''
