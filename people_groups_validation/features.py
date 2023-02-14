@@ -7,6 +7,7 @@ import gdown
 import numpy as np
 from pathlib import Path
 import warnings
+import collections
 from shapely.errors import ShapelyDeprecationWarning
 warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning) 
 
@@ -205,16 +206,22 @@ def validate_country(country, verbose=True):
 
 def countries_with_data():
     '''
-    output: list
+    output: list of tuples
     description: Returns a list of countries that currently have subnational population data
     '''
     
+    countries = collections.defaultdict(list)
     adm1_pop_data_url = 'https://drive.google.com/uc?id=1Ae60lcYPcaCIw2vwY62ZLMfmmbUwJ6F5'
     pop_data_path = './data/global_adm1_populations.xlsx'
     gdown.download(adm1_pop_data_url, pop_data_path, quiet=True)
     
     adm1_populations = pd.concat(pd.read_excel('./data/global_adm1_populations.xlsx', sheet_name=None), ignore_index=True)
-    return sorted(adm1_populations.dropna(subset=['ADM1 Population']).Country.unique())
+    countries_lst = sorted(adm1_populations.dropna(subset=['ADM1 Population']).Country.unique())
+    
+    for country in countries_lst:
+        countries[country[0]].append(f'"{country}"')
+    for letter, country in countries.items():
+        print(letter + ":", ", ".join(country))
 
 
 def map_results(df, query=None):
