@@ -156,6 +156,7 @@ def find_all_adm1(ppg_gdf, pop_data, verbose):
 def find_total_boundary_pop(lst, subnational_data):
     '''
     input: lst (list), subnational_data (dataframe)
+    output: pop_sum (float)
     description: Helper function for find_all_adm1
     '''
     if lst == 'NONE':
@@ -202,18 +203,10 @@ def validate_country(country, verbose=True):
     return find_all_adm1(country_ppg, country_pop, verbose)
 
 
-
-def validate_all(ppg_gdf, subnational_data, verbose=False):
-    '''
-    description: Returns a Pandas dataframe validating all people groups
-    '''
-    raise NotImplementedError('Function not implemented yet.')
-
-
 def countries_with_data():
     '''
     output: list
-    description: Returns a list of countries that currently have subnational data
+    description: Returns a list of countries that currently have subnational population data
     '''
     
     adm1_pop_data_url = 'https://drive.google.com/uc?id=1Ae60lcYPcaCIw2vwY62ZLMfmmbUwJ6F5'
