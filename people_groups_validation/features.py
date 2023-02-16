@@ -135,6 +135,9 @@ def find_all_adm1(ppg_gdf, pop_data, verbose):
     # add the valid column -- (total boundary population * 1.05) >= people group population 
     ppl_areas['Valid People Group'] = (ppl_areas['Total Boundary Population'] * 1.05) >= ppl_areas['People Group Population']
     
+    # add percent total boundary population column -- (people group population / total boundary population) * 100
+    ppl_areas['Percent Boundary Population'] = (ppl_areas['People Group Population'] / ppl_areas['Total Boundary Population']) * 100
+    
     # verbose - add print statements to tell you which people groups are invalid and why
     if verbose:
         invalid_people_groups = ppl_areas[ppl_areas['Valid People Group'] == False]
