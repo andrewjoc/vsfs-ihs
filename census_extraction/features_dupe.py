@@ -351,6 +351,36 @@ def validate_ind(countrydf, verbose=True):
         
     return find_all_adm2(country_ppg, countrydf, verbose)
 
+def validate_id(countrydf, verbose=True):
+    '''
+    input: country (str), verbose (boolean)
+    output: dataframe
+    description: Returns a Pandas dataframe validating all the people groups within a certain country. If verbose=True, it prints out current status of the function and why some groups did not pass the validation
+    '''
+    
+    country = 'Indonesia'
+        
+    if verbose:    
+        print('Processing input data')
+    
+    people_areas_file = Path("./people_areas.geojson")
+    
+    if people_areas_file.is_file():
+        pass
+    else:   
+        people_areas_drive_url = 'https://drive.google.com/uc?id=1xKdfjp2B23VHqo_o4u3kyunioxxFNgSO'
+        output = './people_areas.geojson'
+        gdown.download(people_areas_drive_url, output, quiet=False)
+    
+    people_areas = gpd.read_file('./people_areas.geojson')
+    
+    ppg_gdf = people_areas[['Name', 'GENC0', 'Pop', 'Ctry', 'geometry']].rename(columns={'Name': 'People Group', 'Pop': 'People Group Population', 'GENC0': 'Alpha-3 Code', 'Ctry': 'Country'})
+    
+    # select people groups data for a specific country
+    country_ppg = ppg_gdf[ppg_gdf['Country'] == country]
+        
+    return find_all_adm2(country_ppg, countrydf, verbose)
+
 
 
 
