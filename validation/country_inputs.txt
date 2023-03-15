@@ -1,0 +1,48 @@
+A: "Afghanistan", "Albania", "Algeria", "American Samoa (USA)", "Andorra", "Angola", "Anguilla (UK)", "Antigua and Barbuda", "Argentina", "Armenia", "Aruba (Neth.)", "Australia", "Austria", "Azerbaijan"
+
+B: "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda (UK)", "Bhutan", "Bolivia (Plurinational State of)", "Bosnia and Herzegovina", "Botswana", "Brazil", "British Virgin Islands (UK)", "Brunei Darussalam", "Bulgaria", "Burkina Faso", "Burundi"
+
+C: "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Cayman Islands (UK)", "Central African Republic", "Chad", "Chile", "China", "Christmas Island (Aust.)", "Cocos (Keeling) Islands (Aust.)", "Colombia", "Comoros", "Congo", "Cook Islands (NZ)", "Costa Rica", "Croatia", "Cuba", "Curaçao (Neth.)", "Cyprus", "Czechia", "Côte d'Ivoire"
+
+D: "Democratic People's Republic of Korea", "Democratic Republic of the Congo", "Denmark", "Djibouti", "Dominica", "Dominican Republic"
+
+E: "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia"
+
+F: "Faroe Islands (Den.)", "Fiji", "Finland", "France", "French Guiana (Fr.)", "French Polynesia (Fr.)"
+
+G: "Gabon", "Gambia", "Gaza", "Georgia", "Germany", "Ghana", "Gibraltar (UK)", "Greece", "Greenland (Den.)", "Grenada", "Guadeloupe (Fr.)", "Guam (USA)", "Guatemala", "Guernsey (UK)", "Guinea", "Guinea-Bissau", "Guyana"
+
+H: "Haiti", "Honduras", "Hungary"
+
+I: "Iceland", "India", "Indonesia", "Iran (Islamic Republic of)", "Iraq", "Ireland", "Isle of Man (UK)", "Israel", "Italy"
+
+J: "Jamaica", "Japan", "Jersey (UK)", "Jordan"
+
+K: "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan"
+
+L: "Lao People's Democratic Republic", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg"
+
+M: "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Martinique (Fr.)", "Mauritania", "Mauritius", "Mayotte (Fr.)", "Mexico", "Micronesia (Federated States of)", "Monaco", "Mongolia", "Montenegro", "Montserrat (UK)", "Morocco", "Mozambique", "Myanmar"
+
+N: "Namibia", "Nauru", "Nepal", "Netherlands", "New Caledonia (Fr.)", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue (NZ)", "Norfolk Island (Aust.)", "North Macedonia", "Northern Mariana Islands (USA)", "Norway"
+
+O: "Oman"
+
+P: "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Pitcairn (UK)", "Poland", "Portugal", "Puerto Rico (USA)"
+
+Q: "Qatar"
+
+R: "Republic of Korea", "Republic of Moldova", "Romania", "Russian Federation", "Rwanda", "Réunion (Fr.)"
+
+S: "Saint Barthélemy (Fr.)", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Sint Maarten (Neth.)", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Svalbard Islands (Nor.)", "Sweden", "Switzerland", "Syrian Arab Republic"
+
+T: "Taiwan", "Tajikistan", "Thailand", "Timor-Leste", "Togo", "Tokelau (NZ)", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks and Caicos Islands (UK)", "Tuvalu"
+U: "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom of Great Britain and Northern Ireland", "United Republic of Tanzania", "United States Virgin Islands (USA)", "United States of America", "Uruguay", "Uzbekistan"
+
+V: "Vanuatu", "Venezuela (Bolivarian Republic of)", "Viet Nam"
+
+W: "Wallis and Futuna Islands (Fr.)", "West Bank"
+
+Y: "Yemen"
+
+Z: "Zambia", "Zimbabwe"
