@@ -72,31 +72,8 @@ def read_population_data(adm_level):
 ########################################
 ######## validation functions ##########
 ########################################
-
-
-def areas_to_validate():
-    '''
-    input: -
-    output: list of tuples
-    description: returns a list of countries that currently have subnational population data
-    '''
-    people_areas = dask_geopandas.read_file('./data/people_groups/people_areas.geojson', chunksize=500_000)
-    people_areas = people_areas.compute().replace(country_dict)
-    
-    adm_boundaries = read_adm_data(1).compute()
-    
-    
-    merged_df = people_areas.merge(adm_boundaries, left_on='Ctry', right_on='adm0_name', how='inner')
-    
-    
-    countries = collections.defaultdict(list)
-    countries_lst = sorted(merged_df.Ctry.unique())
-    for country in countries_lst:
-        countries[country[0]].append(f'"{country}"')
-    for letter, country in countries.items():
-        print(letter + ":", ", ".join(country))
         
-        
+    
 def calculate_total_boundary_pop(lst, subnational_data, adm_level):
     '''
     input: lst (list), subnational_data (pandas dataframe), adm_level (int)
@@ -196,6 +173,7 @@ def save_map(results_df):
         
     country = results_df['Country'].iloc[0]
     invalid_df = results_df[results_df['valid'] == False]
+    invalid_df = invalid_df.drop('boundaries_present', axis=1)
     invalid_df = gpd.GeoDataFrame(invalid_df, crs='EPSG:4326')
     
     if invalid_df.shape[0] == 0:
@@ -250,6 +228,6 @@ def view_project_structure():
             │   └── people_areas.geojson
             └── images/
                 └── ihs-logo.png
-            
         """;
+    
     print(struct)
