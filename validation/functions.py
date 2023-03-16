@@ -125,8 +125,8 @@ def validate_country(country, adm_level):
     country_boundaries = adm_boundaries[adm_boundaries['adm0_name'] == country].compute()
     
     if country_boundaries[f'adm{adm_level}_src'].isnull().sum() > 0:
-        if if country_boundaries[f'adm{adm_level}_id'].isnull().sum() > 0:
-        raise Exception(f'This country does not have adm{adm_level} level boundary data. Please input an adm level less than the current input')
+        if country_boundaries[f'adm{adm_level}_id'].isnull().sum() > 0:
+            raise Exception(f'This country does not have adm{adm_level} level boundary data. Please input an adm level less than the current input')
     
     print('loading people areas data')
     people_areas = read_people_areas_data()
@@ -194,7 +194,7 @@ def save_map(results_df):
     else:
         os.mkdir('output')
         
-    country = results['Country'].iloc[0]
+    country = results_df['Country'].iloc[0]
     invalid_df = results_df[results_df['valid'] == False]
     invalid_df = gpd.GeoDataFrame(invalid_df, crs='EPSG:4326')
     
@@ -208,7 +208,7 @@ def save_map(results_df):
     
     
 ########################################
-#########@ other functions #############
+########## other functions #############
 ########################################
     
     
@@ -246,7 +246,10 @@ def view_project_structure():
             │   ├── adm2_populations.csv
             │   ├── adm3_populations.csv
             │   └── adm4_populations.csv
-            └── people_groups/
-                └── people_areas.geojson
+            ├── people_groups/
+            │   └── people_areas.geojson
+            └── images/
+                └── ihs-logo.png
+            
         """;
     print(struct)
