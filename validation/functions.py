@@ -7,6 +7,9 @@ import dask.dataframe as dd
 import dask_geopandas
 import collections
 from country_rename import country_dict
+from country_tests import country_tests
+import ipywidgets as widgets
+from ipywidgets import interactive
 
 
 
@@ -48,7 +51,7 @@ def read_population_data(adm_level):
     output: dask dataframe 
     description: reads in the subnational population dataset for a specified adm_level
     '''
-    if adm_level not in [1,2,3,4]:
+    if adm_level not in [0, 1,2,3,4]:
         raise ValueError('Data is only available for levels 1, 2, 3, 4')
         
     data_types = {f'adm0_name': 'str',
@@ -95,6 +98,9 @@ def validate_country(country, adm_level):
     '''
     if adm_level not in [1,2,3,4]:
         raise ValueError('Data is only available for levels 1, 2, 3, 4')
+        
+    if adm_level not in list(country_tests[country]):
+        raise ValueError(f'This test is not available for {country}. Please choose from the following: {list(country_tests[country])}')
     
     print('started initial loading of subnational data')
     adm_boundaries = read_adm_data(adm_level)
@@ -178,16 +184,40 @@ def save_map(results_df):
     
     if invalid_df.shape[0] == 0:
         return print(f'All people groups in {country} are valid. There is no map to be saved.')
-    invalid_df.explore().save(f'./output/{country}_invalid_adm{invalid_df["test_type"].iloc[0]}.html')
+    
+    invalid_df = invalid_df[~invalid_df['People Group'].str.contains('Deaf') & ~invalid_df['People Group'].str.contains(r'Han Chinese')]
+    
+    invalid_df.explore(color='red').save(f'./output/{country}_invalid_adm{invalid_df["test_type"].iloc[0]}.html')
+
+    
+ 
     
     
     
-    
+########################################
+########## notebook widget #############
+########################################   
+
+
+def view_available_tests(country):
+    return f'Available tests for {country:10}: {country_tests[country]}'    
+
+
+def available_tests_widget():
+    return widgets.interact(view_available_tests, country=list(country_tests.keys()));    
+   
+
+
+
     
     
 ########################################
 ########## other functions #############
 ########################################
+
+
+def view_available_tests(country):
+    print(country_tests[country])
     
     
 def view_project_structure():
@@ -200,6 +230,7 @@ def view_project_structure():
         validation/
         ├── validation.ipynb
         ├── functions.py
+        ├── country_tests.py
         ├── country_rename.py
         ├── country_inputs.py
         └── data/
