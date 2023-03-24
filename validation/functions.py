@@ -27,7 +27,7 @@ def read_adm_data(adm_level):
     output: dask geodataframe 
     description: reads in the specific subnational boundary polygons for a specified adm_level
     '''
-    if adm_level not in [1,2,3,4]:
+    if adm_level not in [0,1,2,3,4]:
         raise ValueError('Data is only available for levels 1, 2, 3, 4') 
         
     adm_df = dask_geopandas.read_file(f'./data/boundaries/adm{adm_level}_polygons/adm{adm_level}_polygons.shp', chunksize=500_000)
@@ -51,7 +51,7 @@ def read_population_data(adm_level):
     output: dask dataframe 
     description: reads in the subnational population dataset for a specified adm_level
     '''
-    if adm_level not in [0, 1,2,3,4]:
+    if adm_level not in [0,1,2,3,4]:
         raise ValueError('Data is only available for levels 1, 2, 3, 4')
         
     data_types = {f'adm0_name': 'str',
@@ -96,7 +96,8 @@ def validate_country(country, adm_level):
     output: pandas dataframe 
     description: validates all people groups in the specified country at the specified adm_level.
     '''
-    if adm_level not in [1,2,3,4]:
+    
+    if adm_level not in [0,1,2,3,4]:
         raise ValueError('Data is only available for levels 1, 2, 3, 4')
         
     if adm_level not in list(country_tests[country]):
@@ -190,6 +191,27 @@ def save_map(results_df):
     invalid_df.explore(color='red').save(f'./output/{country}_invalid_adm{invalid_df["test_type"].iloc[0]}.html')
 
     
+def view_map(df, color='red', people_group='all'):
+    '''
+    input: df (dataframe), color (str), people_group (str)
+    output: folium map
+    description: displays a folium map of a specific country that has been validated. if people_group = all, then
+    all people groups will be displayed. make sure that the people group is spelled correctly and located
+    in the specific country that was validated.
+    '''
+    
+    if df.shape[0] == 0:
+        raise Exception('The results dataframe has no data')
+    
+    gdf = gpd.GeoDataFrame(df, crs='EPSG:4326')
+    gdf = gdf[~gdf['People Group'].str.contains('Deaf') & ~gdf['People Group'].str.contains('Han Chinese')]
+
+    if people_group != 'all':
+        assert people_group in gdf['People Group'].tolist()
+        gdf = gdf[gdf['People Group'] == people_group]
+    
+    return gdf.explore(color=color)
+    
  
     
     
@@ -200,7 +222,7 @@ def save_map(results_df):
 
 
 def view_available_tests(country):
-    return f'Available tests for {country:10}: {country_tests[country]}'    
+    print(f'Available tests for {country:10}: {country_tests[country]}' )   
 
 
 def available_tests_widget():
@@ -214,10 +236,6 @@ def available_tests_widget():
 ########################################
 ########## other functions #############
 ########################################
-
-
-def view_available_tests(country):
-    print(country_tests[country])
     
     
 def view_project_structure():
@@ -235,6 +253,12 @@ def view_project_structure():
         ├── country_inputs.py
         └── data/
             ├── boundaries/
+            │   ├── adm0_polygons/
+            │   │   ├── adm0_polygons.shp
+            │   │   ├── adm0_polygons.cpg
+            │   │   ├── adm0_polygons.dbf
+            │   │   ├── adm0_polygons.prj
+            │   │   └── adm0_polygons.shx
             │   ├── adm1_polygons/
             │   │   ├── adm1_polygons.shp
             │   │   ├── adm1_polygons.cpg
