@@ -224,7 +224,7 @@ def view_project_structure():
     '''
     input: -
     output: - 
-    description: prints out the directory structure of the current people groups validation projects
+    description: prints out the directory structure of the current people groups validation project
     '''
     struct = """
         validation/
@@ -251,6 +251,7 @@ def view_project_structure():
             │       ├── adm4_polygons.shp
             │       └── ...
             ├── populations/
+            │   ├── adm0_populations.csv
             │   ├── adm1_populations.csv
             │   ├── adm2_populations.csv
             │   ├── adm3_populations.csv
