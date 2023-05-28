@@ -1,9 +1,9 @@
 # Methodology
 
-In this section, a fictional example is provided to illustrate the proposed methodology for validation. The main premise of the method is to determine if a population attribute, such as population, is plausible by obtaining the most granular data available at the lowest subnational level (based off either census or humanitarian datastes) and compare it to the data of unknown quality.
+In this section, a fictional example is provided to illustrate the proposed methodology for validation. The main premise of the method is to determine if a population coming from a data source of unknown quality is plausible by comparing it to the most granular official population data at the smallest available subnational level.
 
 
-## Lowest Subnational Level Comparison
+## Subnational Level Comparison
 
 Suppose a dataset exists containing the locations of communities along with basic aggregate statistics (e.g. population, median income, birth rate, death rate, dependency ratio). The dataset comes from a source in which the data are not well documented. Is the population of each commmunity plausible? 
 
@@ -17,7 +17,7 @@ A dataset from the web containing the locations of ethnolingusitic communities i
 
 Since the validty of the data source is unknown and official subnational populations exist (provided by the XYZ census), one way we can attempt to address the main question is to compare the population of (i) each individual community and (i) the sum of all communities to the official census estimates. From here, we can to classify a community population as 'valid' if the community has a population less than or equal to the boundary population, allowing an error of up to 5%.
 
-This method can be extended to geospatial data that may include polygons. In that case, a spatial join can be performed and aggregation can be done by the lowest subnational level, potentially resulting in a list of subnational boundaries in which an ethnolinguistic group is located within. In this case, the population of the ethnolinguistic group can be compared to the sum of the population of all subnational boundaries. 
+This method can be extended to geospatial data that may include polygons. In that case, a spatial join can be performed and aggregation can be done by the smallest subnational level, potentially resulting in a list of subnational boundaries in which an ethnolinguistic group is located within. In this case, the population of the ethnolinguistic group can be compared to the sum of the population of all subnational boundaries. 
 
 ![ethnolinguistic dataset areas](../docs/images/ex_areas.png)
 
