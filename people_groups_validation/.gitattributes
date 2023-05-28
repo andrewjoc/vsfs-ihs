@@ -1,3 +1,0 @@
-*.gdbtable filter=lfs diff=lfs merge=lfs -text
-data/** filter=lfs diff=lfs merge=lfs -text
-data/*.geojson filter=lfs diff=lfs merge=lfs -text
