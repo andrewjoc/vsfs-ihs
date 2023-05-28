@@ -12,14 +12,12 @@ The coverage of nations or the range of health indicators had been limited in ea
 
 
 ***
-### Current Project
-* *Validate PeopleGroups data based on official population estimates*
-* View slides here for further description: https://docs.google.com/presentation/d/1Zbq6yMtkxX7pBoHC5xZrAIRLdgU8IqO6LCvVwhb-8eY/edit?usp=sharing
+### Population Validation Project
+* Documentation: https://andrewjoc.github.io/ihs/intro.html
   
   
  ***
  ### Datasets
- * PeopleGroups Data: https://www.peoplegroups.org/258.aspx
+ * People Groups Data: https://www.peoplegroups.org/258.aspx
  * People Areas Data: https://go-imb.opendata.arcgis.com/datasets/imb::apg-people-group-areas/explore?location=43.783411%2C70.948650%2C4.70  
- * Subnational Boundaries (CGAZ): https://www.geoboundaries.org/downloadCGAZ.html  
- * Subnational Population Data (Oxford MPI, sheet 1): https://ophi.org.uk/multidimensional-poverty-index/
+ * Fieldmaps.io: https://fieldmaps.io
